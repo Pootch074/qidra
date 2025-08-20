@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,9 +16,14 @@ class DatabaseSeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        User::create([
+            'first_name'   => 'System',
+            'last_name'    => 'Admin',
+            'employee_id'  => 110000, // since your column is bigint (no dash allowed)
+            'section_id'   => 1, // must correspond to an actual section
+            'user_type'    => 'assessment',
+            'position'     => 'Administrator',
+            'password'     => Hash::make('password123'),
         ]);
     }
 }

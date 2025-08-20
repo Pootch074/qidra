@@ -12,8 +12,8 @@ use Livewire\Attributes\Validate;
 use Livewire\Volt\Component;
 
 new #[Layout('components.layouts.auth')] class extends Component {
-    #[Validate('required|string|email')]
-    public string $email = '';
+    #[Validate('required|regex:/^[0-9]{2}-[0-9]{4}$/')]
+    public string $employee_id = '';
 
     #[Validate('required|string')]
     public string $password = '';
@@ -29,11 +29,11 @@ new #[Layout('components.layouts.auth')] class extends Component {
 
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt(['email' => $this->email, 'password' => $this->password], $this->remember)) {
+        if (! Auth::attempt(['employee_id' => $this->employee_id, 'password' => $this->password], $this->remember)) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'employee_id' => __('auth.failed'),
             ]);
         }
 
@@ -57,7 +57,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
         $seconds = RateLimiter::availableIn($this->throttleKey());
 
         throw ValidationException::withMessages([
-            'email' => __('auth.throttle', [
+            'employee_id' => __('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -69,12 +69,13 @@ new #[Layout('components.layouts.auth')] class extends Component {
      */
     protected function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->email).'|'.request()->ip());
+        return Str::transliterate(Str::lower($this->employee_id).'|'.request()->ip());
     }
 }; ?>
 
+
 <div class="flex flex-col gap-6">
-    <x-auth-header :title="__('Log in to your account')" :description="__('Enter your email and password below to log in')" />
+    <x-auth-header :title="__('Log in to your account')" :description="__('Enter your employee number and password below to log in')" />
 
     <!-- Session Status -->
     <x-auth-session-status class="text-center" :status="session('status')" />
@@ -82,14 +83,28 @@ new #[Layout('components.layouts.auth')] class extends Component {
     <form wire:submit="login" class="flex flex-col gap-6">
         <!-- Email Address -->
         <flux:input
-            wire:model="email"
-            :label="__('Email address')"
-            type="email"
+            wire:model="employee_id"
+            :label="__('Employee ID Number')"
+            type="text"
             required
             autofocus
-            autocomplete="email"
-            placeholder="email@example.com"
+            autocomplete="off"
+            placeholder="11-0000"
+            maxlength="7"
+            pattern="[0-9]{2}-[0-9]{4}"
+            title="Format must be 11-0000"
+            x-data
+            x-on:input="
+                let val = $el.value.replace(/[^0-9]/g, ''); // keep only digits
+                if (val.length > 2) {
+                    val = val.slice(0,2) + '-' + val.slice(2,6);
+                }
+                $el.value = val.slice(0,7); // max 7 chars
+                $dispatch('input', val.slice(0,7));
+            "
         />
+
+
 
         <!-- Password -->
         <div class="relative">
@@ -102,16 +117,7 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 :placeholder="__('Password')"
                 viewable
             />
-
-            @if (Route::has('password.request'))
-                <flux:link class="absolute end-0 top-0 text-sm" :href="route('password.request')" wire:navigate>
-                    {{ __('Forgot your password?') }}
-                </flux:link>
-            @endif
         </div>
-
-        <!-- Remember Me -->
-        <flux:checkbox wire:model="remember" :label="__('Remember me')" />
 
         <div class="flex items-center justify-end">
             <flux:button variant="primary" type="submit" class="w-full">{{ __('Log in') }}</flux:button>
