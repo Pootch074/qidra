@@ -71,4 +71,13 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Section::class);
     }
+
+    public function initials(): string
+    {
+        // Example: use first letters of first_name + last_name
+        $first = $this->first_name ? strtoupper(substr($this->first_name, 0, 1)) : '';
+        $last = $this->last_name ? strtoupper(substr($this->last_name, 0, 1)) : '';
+
+        return $first . $last;
+    }
 }

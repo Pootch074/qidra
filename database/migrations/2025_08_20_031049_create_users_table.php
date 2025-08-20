@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedBigInteger('section_id'); 
             $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
 
-            $table->enum('user_type', ['preasses', 'encoding', 'assessment', 'releasing']);
+            $table->enum('user_type', ['admin', 'preasses', 'encoding', 'assessment', 'releasing']);
             $table->string('position');
 
             $table->string('password');
@@ -43,7 +43,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
         Schema::dropIfExists('sessions');
+        Schema::dropIfExists('users');
+        
     }
 };

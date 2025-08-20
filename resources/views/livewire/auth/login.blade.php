@@ -40,7 +40,22 @@ new #[Layout('components.layouts.auth')] class extends Component {
         RateLimiter::clear($this->throttleKey());
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $user = Auth::user();
+
+        // Redirect based on user_type
+        switch ($user->user_type) {
+            case 'admin':
+                $this->redirect(route('admin.dashboard'), navigate: true);
+                break;
+
+            case 'staff':
+                $this->redirect(route('staff.dashboard'), navigate: true);
+                break;
+
+            default:
+                $this->redirect(route('welcome'), navigate: true);
+                break;
+        }
     }
 
     /**
