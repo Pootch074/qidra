@@ -44,9 +44,18 @@
                         alt="Bottom Image" class="object-contain mt-auto">
                 </div>
 
-                <div class="absolute bottom-0 left-0 w-full h-1/3 bg-blue-200 flex items-center justify-center">
-                    Card 2
+                <div class="absolute bottom-0 left-0 w-full h-1/3 bg-blue-200 flex items-center justify-center gap-4">
+                    <!-- Button 1 -->
+                    <button class="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded">
+                        Action 1
+                    </button>
+
+                    <!-- Button 2 -->
+                    <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded">
+                        Action 2
+                    </button>
                 </div>
+
             </div>
 
 
