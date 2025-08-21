@@ -17,10 +17,6 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('employee_id')->unique();
 
-            // section_id foreign key
-            $table->unsignedBigInteger('section_id');
-            $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
-
             $table->enum('user_type', ['admin', 'preasses', 'encoding', 'assessment', 'releasing']);
 
             // window_id (nullable)

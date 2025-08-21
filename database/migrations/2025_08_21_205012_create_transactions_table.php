@@ -16,11 +16,6 @@ return new class extends Migration
             $table->integer('queue_number');
             $table->enum('client_type', ['priority', 'regular']);
 
-            //section_id foreign key
-            $table->unsignedBigInteger('section_id'); 
-            $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
-
-            $table->integer('step_id');
             $table->integer('window_id');
             $table->enum('queue_status', ['waiting', 'pending', 'serving']);
 

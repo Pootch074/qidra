@@ -9,8 +9,9 @@ class Division extends Model
     protected $table = 'divisions';
     public function dswd()
     {
-        return $this->belongsTo(Dswd::class, 'dswd_id');
+        return $this->belongsTo(Dswd::class);
     }
+
 
     public function sections()
     {

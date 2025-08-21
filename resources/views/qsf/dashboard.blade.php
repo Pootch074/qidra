@@ -33,10 +33,11 @@
 
                     <!-- Text (closer to the Top Image) -->
                     <div class="mt-2 text-center font-bold text-xl">
-                        {{ auth()->user()->field_office }} <br>
-                        {{ auth()->user()->section->division->division_name ?? '' }} <br>
-                        {{ auth()->user()->section->section_name ?? '' }}
+                        {{ auth()->user()->window->step->section->division->dswd->field_office ?? 'No Field Office' }} <br>
+                        {{ auth()->user()->window->step->section->division->division_name ?? 'No Division' }} <br>
+                        {{ auth()->user()->window->step->section->section_name ?? 'No Section' }}
                     </div>
+
 
                     <!-- Bottom Image -->
                     <img src="{{ Vite::asset('resources/images/col3row3.png') }}" 
