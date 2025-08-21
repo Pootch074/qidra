@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
 
 class User extends Authenticatable
 {
@@ -69,7 +70,7 @@ class User extends Authenticatable
      */
     public function section()
     {
-        return $this->belongsTo(Section::class);
+        return $this->belongsTo(Section::class, 'section_id');
     }
 
     public function initials(): string
@@ -79,5 +80,15 @@ class User extends Authenticatable
         $last = $this->last_name ? strtoupper(substr($this->last_name, 0, 1)) : '';
 
         return $first . $last;
+    }
+    public function dswd()
+    {
+        return $this->section?->division?->dswd;
+    }
+    public function getFieldOfficeAttribute()
+    {
+        return $this->section
+            ? $this->section->division->dswd->field_office ?? 'No Field Office Assigned'
+            : 'No Section Assigned';
     }
 }

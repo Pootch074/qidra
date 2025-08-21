@@ -7,5 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Section extends Model
 {
-    
+    protected $table = 'sections';
+
+    public function division()
+    {
+        return $this->belongsTo(Division::class, 'division_id');
+    }
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'section_id');
+    }
 }

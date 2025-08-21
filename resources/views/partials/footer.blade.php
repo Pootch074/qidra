@@ -1,3 +1,3 @@
-<footer class="bg-gray-200 p-4 text-black" style="height: 8vh;">
+<footer class="footer-bg p-4" style="height: 8vh;">
     &copy; {{ date('Y') }} DSWD Admin System
 </footer>

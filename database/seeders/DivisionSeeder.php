@@ -17,11 +17,11 @@ class DivisionSeeder extends Seeder
             [
                 'id'  => 1,   // make sure division with ID 1 exists
                 'division_name' => 'Protective Services Division',
-                'dswd_id' => 6,
+                'dswd_id' => 1,
                 'created_at'   => now(),
                 'updated_at'   => now(),
             ],
-            
+
         ]);
     }
 }

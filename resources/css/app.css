@@ -1,16 +1,23 @@
-@import 'tailwindcss';
-@import '../../vendor/livewire/flux/dist/flux.css';
+@import "tailwindcss";
+@import "../../vendor/livewire/flux/dist/flux.css";
 
+.login-body {
+    @apply min-h-screen bg-cover bg-center;
+    background-image: url("/resources/images/dswd.png");
+}
 body {
-  @apply min-h-screen bg-cover bg-center;
-  background-image: url('/resources/images/dswd.png');
+    font-family: Arial, sans-serif;
 }
 .header-bg {
-    background-image: url('../images/header.png');
+    background-image: url("../images/header.png");
     background-size: cover;
     background-position: center;
 }
-
+.footer-bg {
+    background-image: url("../images/footer.png");
+    background-size: cover;
+    background-position: center;
+}
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
@@ -20,7 +27,9 @@ body {
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: "Instrument Sans", ui-sans-serif, system-ui, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
+        "Noto Color Emoji";
 
     --color-zinc-50: #fafafa;
     --color-zinc-100: #f5f5f5;
@@ -48,7 +57,6 @@ body {
 }
 
 @layer base {
-
     *,
     ::after,
     ::before,
@@ -63,7 +71,7 @@ body {
 }
 
 [data-flux-label] {
-    @apply  !mb-0 !leading-tight;
+    @apply !mb-0 !leading-tight;
 }
 
 input:focus[data-flux-control],

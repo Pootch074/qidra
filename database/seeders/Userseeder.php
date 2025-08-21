@@ -14,14 +14,31 @@ class Userseeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'first_name'   => 'System',
-            'last_name'    => 'Admin',
-            'employee_id'  => '11-0000', 
-            'section_id'   => 1,
-            'user_type'    => 'admin',
-            'position'     => 'SWOII',
-            'password'     => Hash::make('password'),
+        User::insert([
+            [
+                'first_name'  => 'System',
+                'last_name'   => 'Admin',
+                'employee_id' => '11-0000',
+                'section_id'  => 1,
+                'user_type'   => 'admin',
+                'step_id'   => null,
+                'window_id'   => null,
+                'assigned_category'   => null,
+                'position'    => 'SWOII',
+                'password'    => Hash::make('password'),
+            ],
+            [
+                'first_name'  => 'Preasses',
+                'last_name'   => 'Person',
+                'employee_id' => '11-1110',
+                'section_id'  => 1,
+                'user_type'   => 'preasses',
+                'step_id'   => 1,
+                'window_id'   => null,
+                'assigned_category'   => 'regular',
+                'position'    => 'SWOII',
+                'password'    => Hash::make('password'),
+            ],
         ]);
     }
 }

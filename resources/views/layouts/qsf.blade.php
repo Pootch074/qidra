@@ -9,13 +9,15 @@
     @include('partials.header') {{-- contains your header code with height 10vh --}}
 
     {{-- Main Content --}}
-    <main class="flex-1 overflow-auto p-6">
+    <main class="flex-1 overflow-hidden p-2 bg-[#cbdce8]">
         @yield('content')
     </main>
 
+
     {{-- Footer --}}
     @include('partials.footer') {{-- contains your footer code with height 10vh --}}
-
+    @livewireScripts
+    @fluxScripts
 </body>
 
 

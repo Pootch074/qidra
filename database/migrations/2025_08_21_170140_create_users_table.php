@@ -18,15 +18,27 @@ return new class extends Migration
             $table->string('employee_id')->unique();
 
             // section_id foreign key
-            $table->unsignedBigInteger('section_id'); 
+            $table->unsignedBigInteger('section_id');
             $table->foreign('section_id')->references('id')->on('sections')->onDelete('cascade');
 
             $table->enum('user_type', ['admin', 'preasses', 'encoding', 'assessment', 'releasing']);
-            $table->string('position');
 
+            // step_id (nullable)
+            $table->unsignedBigInteger('step_id')->nullable();
+            $table->foreign('step_id')->references('id')->on('steps')->onDelete('cascade');
+
+            // window_id (nullable)
+            $table->unsignedBigInteger('window_id')->nullable();
+            $table->foreign('window_id')->references('id')->on('windows')->onDelete('cascade');
+
+            // assigned_category (nullable)
+            $table->enum('assigned_category', ['priority', 'regular'])->nullable();
+
+            $table->string('position');
             $table->string('password');
             $table->timestamps();
         });
+
 
         Schema::create('sessions', function (Blueprint $table) {
             $table->string('id')->primary();
@@ -45,6 +57,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('sessions');
         Schema::dropIfExists('users');
-        
     }
 };

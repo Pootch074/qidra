@@ -45,12 +45,14 @@ new #[Layout('components.layouts.auth')] class extends Component {
         // Redirect based on user_type
         switch ($user->user_type) {
             case 'admin':
-                $this->redirect(route('admin.dashboard'), navigate: true);
+                $this->redirect(route('dashboard'), navigate: true);
                 break;
 
-            case 'staff':
-                $this->redirect(route('staff.dashboard'), navigate: true);
+            // login.blade.php
+            case 'preasses':
+                $this->redirect(route('qsf.dashboard'), navigate: true);
                 break;
+
 
             default:
                 $this->redirect(route('welcome'), navigate: true);
