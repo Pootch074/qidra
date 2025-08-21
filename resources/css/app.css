@@ -5,6 +5,12 @@ body {
   @apply min-h-screen bg-cover bg-center;
   background-image: url('/resources/images/dswd.png');
 }
+.header-bg {
+    background-image: url('../images/header.png');
+    background-size: cover;
+    background-position: center;
+}
+
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
