@@ -7,7 +7,11 @@
         <div class="grid grid-cols-[33%_33%_33%] gap-2 text-2xl font-bold">
             <div class="bg-[#150e60] rounded-lg shadow flex items-center justify-center">WAITING</div>
             <div class="bg-[#150e60] rounded-lg shadow flex items-center justify-center">PENDING</div>
-            <div class="bg-[#150e60] rounded-lg shadow flex items-center justify-center">SERVING STEP {{ auth()->user()->step_id }} WINDOW {{ auth()->user()->window_id }}</div>
+            <div class="bg-[#150e60] rounded-lg shadow flex items-center justify-center">
+                SERVING STEP {{ auth()->user()->window->step->step_number ?? '' }} 
+                WINDOW {{ auth()->user()->window->window_number ?? '' }}
+            </div>
+
         </div>
 
 

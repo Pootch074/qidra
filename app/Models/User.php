@@ -91,4 +91,8 @@ class User extends Authenticatable
             ? $this->section->division->dswd->field_office ?? 'No Field Office Assigned'
             : 'No Section Assigned';
     }
+    public function window()
+    {
+        return $this->belongsTo(Window::class);
+    }
 }
