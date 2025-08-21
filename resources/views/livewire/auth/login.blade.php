@@ -48,17 +48,17 @@ new #[Layout('components.layouts.auth')] class extends Component {
                 $this->redirect(route('dashboard'), navigate: true);
                 break;
 
-            // login.blade.php
             case 'preasses':
+            case 'encoding': // 👈 merged into same case
                 $this->redirect(route('qsf.dashboard'), navigate: true);
                 break;
-
 
             default:
                 $this->redirect(route('welcome'), navigate: true);
                 break;
         }
     }
+
 
     /**
      * Ensure the authentication request is not rate limited.

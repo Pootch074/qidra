@@ -10,9 +10,9 @@ class UserTypeMiddleware
     /**
      * Handle an incoming request.
      */
-    public function handle($request, Closure $next, string $type)
+    public function handle($request, Closure $next, ...$types)
     {
-        if (! Auth::check() || Auth::user()->user_type !== $type) {
+        if (!Auth::check() || !in_array(Auth::user()->user_type, $types)) {
             abort(403, 'Unauthorized.');
         }
 

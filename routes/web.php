@@ -23,13 +23,10 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'user_type:admin'])->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
 });
-Route::middleware(['auth', 'user_type:preasses'])->group(function () {
+
+Route::middleware(['auth', 'user_type:preasses,encoding'])->group(function () {
+    // 👆 allow both preasses and encoding
     Route::view('/qsf/dashboard', 'qsf.dashboard')->name('qsf.dashboard');
-});
-
-
-Route::middleware(['auth', 'user_type:staff'])->group(function () {
-    Route::view('/staff/dashboard', 'staff.dashboard')->name('staff.dashboard');
 });
 
 require __DIR__ . '/auth.php';
