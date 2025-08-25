@@ -1,4 +1,2 @@
 import "../css/app.css";
-
-// Import flux.min.js so Vite bundles it
-import "./flux.min.js";
+import "flux"; // or the correct entry point (check docs)
