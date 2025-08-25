@@ -23,7 +23,9 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 
-    # deny access to everything except /public
-    RedirectMatch 404 /((?!public).)*$
+    # Deny direct access to everything except /public
+    RewriteEngine On
+    RewriteRule !^public/ - [F,L]
+
 
 </IfModule>
