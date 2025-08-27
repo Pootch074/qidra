@@ -5,11 +5,13 @@
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
+        <img src="{{ asset('images/dswd-color.png') }}" alt="DSWD Logo" class="w-24 sm:w-32 md:w-40 lg:w-48 h-auto">
+
         <!-- Email Address -->
         <div>
-            <x-input-label for="employeeID" :value="__('Employee ID')" />
-            <x-text-input id="employeeID" class="block mt-1 w-full" type="text" name="employeeID" :value="old('employeeID')" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('employeeID')" class="mt-2" />
+            <x-input-label for="employee_id" :value="__('Employee ID')" />
+            <x-text-input id="employee_id" class="block mt-1 w-full" type="text" name="employee_id" :value="old('employee_id')" maxlength="7" required autofocus autocomplete="employee_id" />
+            <x-input-error :messages="$errors->get('employee_id')" class="mt-2" />
         </div>
 
         <!-- Password -->
@@ -44,4 +46,13 @@
             </x-primary-button>
         </div>
     </form>
+    <script>
+    document.getElementById('employee_id').addEventListener('input', function (e) {
+        let value = e.target.value.replace(/\D/g, ''); // remove non-digits
+        if (value.length > 2) {
+            value = value.substring(0, 2) + '-' + value.substring(2, 6);
+        }
+        e.target.value = value;
+    });
+    </script>
 </x-guest-layout>
