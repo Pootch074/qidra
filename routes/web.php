@@ -8,6 +8,12 @@ use Illuminate\Support\Facades\Route;
 //     return view('welcome');
 // });
 
+Route::get('/welcome', function () {
+    return view('welcome');
+})->name('welcome')->middleware('auth');
+
+
+
 Route::get('/', [AuthenticatedSessionController::class, 'create'])
         ->name('login');
 

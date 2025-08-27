@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id(); // bigint pk
             $table->integer('queue_number');
-            $table->string('client_type', 255);
+            $table->enum('client_type', ['priority', 'regular']);
             $table->unsignedBigInteger('window_id'); // FK to windows
-            $table->string('queue_status', 255);
+            $table->enum('queue_status', ['waiting', 'pending', 'serving', 'cancelled']);
             $table->timestamps();
             $table->timestamp('served_at')->nullable();
 
