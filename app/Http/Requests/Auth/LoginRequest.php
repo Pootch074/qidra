@@ -30,21 +30,54 @@ class LoginRequest extends FormRequest
         ];
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
-
-        // Attempt login with employee_id instead of email
         if (! Auth::attempt($this->only('employee_id', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
-
             throw ValidationException::withMessages([
                 'employee_id' => trans('auth.failed'),
             ]);
         }
 
         RateLimiter::clear($this->throttleKey());
+        $user = Auth::user();
+        if ($user->user_type === 'preassess') {
+            redirect()->route('preassess')->send();
+        }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public function ensureIsNotRateLimited(): void
     {

@@ -12,8 +12,7 @@
 
                     <p>{{ __("You're logged in!") }}</p>
 
-                    @php
-                        // Retrieve the first role name assigned to the authenticated user
+                    <!-- @php
                         $role = auth()->user()->getRoleNames()->first();
                     @endphp
 
@@ -26,7 +25,7 @@
                         <p class="mt-4 text-red-600">
                             {{ __("You're logged in but no role has been assigned.") }}
                         </p>
-                    @endif
+                    @endif -->
 
                 </div>
             </div>

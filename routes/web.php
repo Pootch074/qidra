@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PreassessController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,16 +11,16 @@ Route::get('/', function () {
 
 Route::get('/preassess', function () {
     return view('preassess');
-});
+})->name('preassess');
+
 
 // Route::get('/welcome', function () {
 //     return view('welcome');
 // })->name('welcome')->middleware('auth');
 
-
-
 // Route::get('/', [AuthenticatedSessionController::class, 'create'])
 //         ->name('login');
+
 
 
 
