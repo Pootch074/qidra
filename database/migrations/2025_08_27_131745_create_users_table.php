@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('first_name', 255);
             $table->string('last_name', 255);
             $table->bigInteger('employee_id')->unique(); // employee ID (unique)
-            $table->enum('user_type', ['admin', 'preasses', 'encoding', 'assessment']);
+            $table->enum('user_type', ['admin', 'preassess', 'encoding', 'assessment']);
             $table->unsignedBigInteger('window_id')->nullable(); // FK to windows.id
             $table->enum('assigned_category', ['priority', 'regular']);
             $table->string('position', 255)->nullable();

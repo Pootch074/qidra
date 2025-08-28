@@ -13,20 +13,22 @@ class RolePermissionSeeder extends Seeder
         // Clear cached roles and permissions
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Define permissions
-        Permission::create(['name' => 'view posts']);
-        Permission::create(['name' => 'create posts']);
-        Permission::create(['name' => 'edit posts']);
-        Permission::create(['name' => 'delete posts']);
+        // Create permissions
+        Permission::firstOrCreate(['name' => 'view posts']);
+        Permission::firstOrCreate(['name' => 'create posts']);
+        Permission::firstOrCreate(['name' => 'edit posts']);
+        Permission::firstOrCreate(['name' => 'delete posts']);
 
         // Create roles
-        $admin = Role::create(['name' => 'admin']);
-        $editor = Role::create(['name' => 'editor']);
-        $viewer = Role::create(['name' => 'viewer']);
+        $admin = Role::firstOrCreate(['name' => 'admin']);
+        $editor = Role::firstOrCreate(['name' => 'editor']);
+        $viewer = Role::firstOrCreate(['name' => 'viewer']);
+        $preassess = Role::firstOrCreate(['name' => 'preassess']); // new role for your users
 
-        // Assign permissions to roles
+        // Assign permissions
         $admin->givePermissionTo(Permission::all());
         $editor->givePermissionTo(['view posts', 'create posts', 'edit posts']);
         $viewer->givePermissionTo(['view posts']);
+        // $preassess can be assigned permissions later if needed
     }
 }

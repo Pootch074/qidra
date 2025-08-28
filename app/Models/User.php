@@ -10,23 +10,28 @@ use Spatie\Permission\Traits\HasRoles;
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasRoles; // Add HasRoles
+    use HasFactory, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'employee_id', // use employee_id instead of email
+        'first_name',
+        'last_name',
+        'employee_id',      // used for login instead of email
+        'user_type',
+        'window_id',
+        'assigned_category',
+        'position',
         'password',
     ];
 
     /**
      * The attributes that should be hidden for serialization.
      *
-     * @var list<string>
+     * @var array<int, string>
      */
     protected $hidden = [
         'password',
@@ -34,16 +39,13 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var array<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'password' => 'hashed',
+    ];
 
     /**
      * Override the authentication identifier name.
@@ -54,6 +56,4 @@ class User extends Authenticatable
     {
         return 'employee_id';
     }
-
-    
 }

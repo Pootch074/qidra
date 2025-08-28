@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
@@ -13,28 +14,42 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Example default Admin account
-        User::create([
-            'first_name'  => 'Admin',
-            'last_name'   => 'User',
-            'employee_id' => 111234,
-            'user_type'   => 'admin',
-            'window_id'   => null,
-            'position'    => 'System Administrator',
-            'password'    => Hash::make('password'),
-        ]);
+        // 1️⃣ Create roles if they don't exist
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $preassessRole = Role::firstOrCreate(['name' => 'preassess']);
 
-        User::create([
-            'first_name'  => 'Preassess',
-            'last_name'   => 'User',
-            'employee_id' => 111235,
-            'user_type'   => 'preasses',
-            'window_id'   => null,
-            'position'    => 'SWOII',
-            'password'    => Hash::make('password'),
-        ]);
+        // 2️⃣ Create Admin user
+        $admin = User::updateOrCreate(
+            ['employee_id' => 111234], // search by employee_id
+            [
+                'first_name' => 'Admin',
+                'last_name'  => 'User',
+                'user_type'  => 'admin',
+                'window_id'  => null,
+                'assigned_category' => 'priority',
+                'position'   => 'System Administrator',
+                'password'   => Hash::make('password'),
+            ]
+        );
 
+        // Assign Admin role
+        $admin->assignRole($adminRole);
 
-        // You can also add more seed users here if needed
+        // 3️⃣ Create Preassess user
+        $preassess = User::updateOrCreate(
+            ['employee_id' => 111235],
+            [
+                'first_name' => 'Preassess',
+                'last_name'  => 'User',
+                'user_type'  => 'preassess',
+                'window_id'  => null,
+                'assigned_category' => 'priority',
+                'position'   => 'SWOII',
+                'password'   => Hash::make('password'),
+            ]
+        );
+
+        // Assign Preassess role
+        $preassess->assignRole($preassessRole);
     }
 }
