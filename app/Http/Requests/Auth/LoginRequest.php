@@ -15,6 +15,13 @@ class LoginRequest extends FormRequest
         return true;
     }
 
+    public function prepareForValidation()
+    {
+        $this->merge([
+            'employee_id' => str_replace('-', '', $this->employee_id),
+        ]);
+    }
+
     public function rules(): array
     {
         return [

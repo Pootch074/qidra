@@ -4,9 +4,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', function () {
+    return view('welcome');
+});
 
 Route::get('/welcome', function () {
     return view('welcome');
@@ -14,8 +14,8 @@ Route::get('/welcome', function () {
 
 
 
-Route::get('/', [AuthenticatedSessionController::class, 'create'])
-        ->name('login');
+// Route::get('/', [AuthenticatedSessionController::class, 'create'])
+//         ->name('login');
 
 
 
