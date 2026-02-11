@@ -10,8 +10,8 @@
                 use App\Libraries\Steps;
                 use Illuminate\Support\Facades\Auth;
 
-                $user = Auth::user();
-                $userCategory = $user->assigned_category;
+                $user = Auth::user()->load('category'); // eager load to avoid N+1 queries
+                $userCategory = $user->category_name;
                 $sectionId = $user->section_id ?? null;
                 $stepId = $user->step_id ?? null;
 

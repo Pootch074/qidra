@@ -188,6 +188,11 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
+    public function getCategoryNameAttribute(): ?string
+{
+    return $this->category?->category_name;
+}
+
     public function window()
     {
         return $this->belongsTo(Window::class);
