@@ -73,7 +73,7 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'string',
-            'category' => 'string',
+            'category_id' => 'integer',
             'window_id' => 'integer',
             'status' => 'integer',
             'user_type' => 'integer',
@@ -171,17 +171,6 @@ class User extends Authenticatable
     {
         return $query->where('user_type', self::TYPE_IDSCAN);
     }
-
-    public function window()
-    {
-        return $this->belongsTo(Window::class);
-    }
-
-    public function step()
-    {
-        return $this->belongsTo(Step::class);
-    }
-
     public function division()
     {
         return $this->belongsTo(Division::class);
@@ -190,6 +179,18 @@ class User extends Authenticatable
     public function section()
     {
         return $this->belongsTo(Section::class);
+    }
+    public function step()
+    {
+        return $this->belongsTo(Step::class);
+    }
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'category_id');
+    }
+    public function window()
+    {
+        return $this->belongsTo(Window::class);
     }
 
     public function isAdmin(): bool

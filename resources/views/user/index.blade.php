@@ -118,9 +118,12 @@
             <div
                 class="col-span-3 flex flex-col rounded-md bg-white rounded-b-lg border-2 border-[#2e3192] shadow overflow-hidden h-[80vh]">
                 <div class="bg-[#2e3192] text-white text-center font-bold text-2xl py-2">
-                    @if ($stepNumber || $windowNumber)
-                        STEP {{ $stepNumber ?? '-' }}&nbsp;WINDOW {{ $windowNumber ?? '-' }}
+                    @if ($stepNumber || $windowNumber || $categoryName)
+                        STEP {{ $stepNumber ?? '-' }}&nbsp;
+                        WINDOW {{ $windowNumber ?? '-' }}&nbsp;
+                        {{ $categoryName ? \Illuminate\Support\Str::title($categoryName) : '-' }}
                     @endif
+
                 </div>
 
                 <div class="text-black text-center font-bold py-2">

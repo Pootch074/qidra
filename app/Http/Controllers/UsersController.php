@@ -84,6 +84,7 @@ class UsersController extends Controller
         $queues = $this->getQueuesForUser($user);
 
         $stepNumber = optional($user->step)->step_number;
+        $categoryName = optional($user->category)->category_name;
         $windowNumber = optional($user->window)->window_number;
         $fieldOffice = optional($user->section?->division?->office)->office_name;
         $divisionName = optional($user->section?->division)->division_name;
@@ -91,6 +92,7 @@ class UsersController extends Controller
 
         return view('user.index', array_merge($queues, compact(
             'stepNumber',
+            'categoryName',
             'windowNumber',
             'fieldOffice',
             'divisionName',
