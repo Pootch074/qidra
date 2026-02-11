@@ -22,10 +22,10 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('position')->nullable();
             $table->tinyInteger('user_type')->nullable();
-            $table->unsignedBigInteger('category_id')->nullable();
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
             $table->unsignedBigInteger('step_id')->nullable();
             $table->foreign('step_id')->references('id')->on('steps')->onDelete('set null');
+            $table->unsignedBigInteger('category_id')->nullable();
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
             $table->unsignedBigInteger('window_id')->nullable();
             $table->foreign('window_id')->references('id')->on('windows')->onDelete('set null');
             $table->tinyInteger('status')->default(0);
