@@ -140,7 +140,7 @@
                 </div>
 
                 @php
-                    $userCategory = Auth::user()->assigned_category;
+                    $userCategory = Auth::user()->category_name;
                 @endphp
 
                 <div class="content-center text-white text-center font-bold flex-1 px-2">
@@ -582,7 +582,7 @@
                     const id = target.getAttribute('data-id');
 
                     const stepNumber = {{ $stepNumber ?? 'null' }};
-                    const assignedCategory = "{{ strtolower(Auth::user()->assigned_category) }}";
+                    const assignedCategory = "{{ strtolower(Auth::user()->category_name) }}";
 
                     if (stepNumber === 1) {
                         modalMessage.textContent = "Serve again or proceed client to next step?";
