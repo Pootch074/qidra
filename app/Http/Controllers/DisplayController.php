@@ -20,55 +20,54 @@ class DisplayController extends Controller
     }
 
     public function getStepsBySectionId()
-    {
-        try {
-            $user = Auth::user();
+{
+    try {
+        $user = Auth::user();
 
-            // Fetch all steps for the user's section
-            $steps = Step::with('categories.windows')
-                ->where('section_id', $user->section_id)
-                ->orderBy('step_number')
-                ->get();
+        // Fetch all steps for the user's section
+        $steps = Step::with('categories.windows')
+            ->where('section_id', $user->section_id)
+            ->orderBy('step_number')
+            ->get();
 
-            $data = $steps->map(function ($step) use ($user) {
+        $data = $steps->map(function ($step) use ($user) {
 
-                // Determine which categories to pick for this step
-                $categoryNames = match ($step->step_number) {
-                    1, 2 => [$user->assigned_category],
-                    3, 4 => ['both'],
-                    default => [],
-                };
+            // Determine which categories to pick for this step
+            $categoryNames = match($step->step_number) {
+                1, 2 => [$user->assigned_category], // use user assigned category
+                3, 4 => ['both'],                   // always 'both' for Step 3 & 4
+                default => [],
+            };
 
-                // Filter categories for this step
-                $filteredCategories = $step->categories->filter(fn ($cat) => in_array($cat->category_name, $categoryNames));
+            // Filter categories for this step
+            $filteredCategories = $step->categories->filter(fn($cat) => in_array($cat->category_name, $categoryNames));
 
-                // Flatten windows
-                $windows = $filteredCategories->flatMap(fn ($cat) => $cat->windows)->values();
-
-                // Optional: you can assign first transaction here if needed
-                // For now, transactions array will be empty
-                $windows = $windows->map(fn ($win) => [
+            // Flatten windows under filtered categories
+            $windows = $filteredCategories->flatMap(fn($cat) => $cat->windows)
+                ->values()
+                ->map(fn($win) => [
                     'window_id' => $win->id,
                     'window_number' => $win->window_number,
-                    'transactions' => [], // assign later
+                    'transactions' => [], // assign transactions later if needed
                 ]);
 
-                return [
-                    'step_number' => $step->step_number,
-                    'step_name' => $step->step_name,
-                    'windows' => $windows,
-                ];
-            });
+            return [
+                'step_number' => $step->step_number,
+                'step_name' => $step->step_name,
+                'windows' => $windows,
+            ];
+        });
 
-            return response()->json($data);
+        return response()->json($data);
 
-        } catch (\Exception $e) {
-            return response()->json([
-                'error' => 'Server Error',
-                'message' => $e->getMessage(),
-            ], 500);
-        }
+    } catch (\Exception $e) {
+        return response()->json([
+            'error' => 'Server Error',
+            'message' => $e->getMessage(),
+        ], 500);
     }
+}
+
 
     public function getLatestTransaction()
     {

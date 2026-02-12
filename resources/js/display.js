@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
             window.speechSynthesis.cancel();
 
             const match = message.match(
-                /Client number (\w\d+), please proceed to step (\d+), window (\d+)/
+                /Client number (\w\d+), please proceed to step (\d+), window (\d+)/,
             );
             const flashDiv = document.getElementById("flashServingQueue");
 
@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 flashDiv.classList.add("animate-flash");
                 setTimeout(
                     () => flashDiv.classList.remove("animate-flash"),
-                    1500
+                    1500,
                 );
             }
 
@@ -169,6 +169,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (!container || !noSteps) return;
 
                 container.innerHTML = "";
+
                 if (!data || !data.length) {
                     noSteps.classList.remove("hidden");
                     return;
@@ -177,35 +178,30 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 data.forEach((step) => {
                     const normalizedName = step.step_name?.toLowerCase();
-                    if (normalizedName === "release") return;
 
+                    // Skip release for regular users if needed
                     if (
-                        normalizedName === "assessment" &&
+                        normalizedName === "release" &&
                         window.appUser.assignedCategory.toLowerCase() ===
                             "regular"
-                    ) {
+                    )
                         return;
-                    }
 
                     const card = document.createElement("div");
                     card.className =
                         "rounded-lg shadow-md p-1 mb-3 flex flex-col bg-gray-200";
 
+                    // Step header
                     const stepNameDisplay =
                         step.step_name && step.step_name !== "None"
                             ? step.step_name
                             : "";
-
                     let html = `
-                        <h3 class="text-4xl font-bold text-[#000000] mb-1 py-3 flex items-center justify-center space-x-2 bg-white rounded">
-                            <span>STEP ${step.step_number}</span>
-                            ${
-                                stepNameDisplay
-                                    ? `<span>${stepNameDisplay}</span>`
-                                    : ""
-                            }
-                        </h3>
-                    `;
+                    <h3 class="text-4xl font-bold text-[#000000] mb-1 py-3 flex items-center justify-center space-x-2 bg-white rounded">
+                        <span>STEP ${step.step_number}</span>
+                        ${stepNameDisplay ? `<span>${stepNameDisplay}</span>` : ""}
+                    </h3>
+                `;
 
                     if (step.windows.length > 0) {
                         html += `<div class="grid grid-cols-2 gap-2">`;
@@ -216,8 +212,8 @@ document.addEventListener("DOMContentLoaded", () => {
                                     ? win.transactions[0]
                                     : null;
 
+                            // Highlight for priority pre-assessment/encode if needed
                             let bgClass = "bg-[#2e3192]";
-
                             if (
                                 (normalizedName === "pre-assessment" ||
                                     normalizedName === "encode") &&
@@ -228,23 +224,22 @@ document.addEventListener("DOMContentLoaded", () => {
                             }
 
                             html += `
-                                <div class="rounded-lg text-[#FFFFFF] text-2xl font-semibold flex flex-col items-center justify-center w-full">
-                                    <div class="flex items-center w-full h-full rounded-lg border-4 border-[#2e3192]">
-                                        <span class="${bgClass} py-1 text-center w-1/5">
-                                            <p class="text-xl font-semibold">Window</p>
-                                            <p class="text-5xl font-bold">${
-                                                win.window_number
-                                            }</p>
-                                        </span>
-                                        ${
-                                            firstTx
-                                                ? `<span class="queue-number flex items-center justify-center bg-[#FFFFFF] text-[#000000] px-3 py-1 text-6xl font-bold text-center w-4/5 h-full rounded-r-lg" data-queue="${firstTx.queue_number}">
-                                                    ${firstTx.queue_number}
-                                                  </span>`
-                                                : `<span class="flex items-center justify-center bg-[#FFFFFF] text-[#000000] px-3 py-1 text-sm text-center w-4/5 h-full rounded-r-lg">🚫</span>`
-                                        }
-                                    </div>
-                                </div>`;
+                            <div class="rounded-lg text-[#FFFFFF] text-2xl font-semibold flex flex-col items-center justify-center w-full">
+                                <div class="flex items-center w-full h-full rounded-lg border-4 border-[#2e3192]">
+                                    <span class="${bgClass} py-1 text-center w-1/5">
+                                        <p class="text-xl font-semibold">Window</p>
+                                        <p class="text-5xl font-bold">${win.window_number}</p>
+                                    </span>
+                                    ${
+                                        firstTx
+                                            ? `<span class="queue-number flex items-center justify-center bg-[#FFFFFF] text-[#000000] px-3 py-1 text-6xl font-bold text-center w-4/5 h-full rounded-r-lg" data-queue="${firstTx.queue_number}">
+                                                ${firstTx.queue_number}
+                                              </span>`
+                                            : `<span class="flex items-center justify-center bg-[#FFFFFF] text-[#000000] px-3 py-1 text-sm text-center w-4/5 h-full rounded-r-lg">🚫</span>`
+                                    }
+                                </div>
+                            </div>
+                        `;
                         });
 
                         html += `</div>`;
@@ -306,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             formattedQueue,
                             tx.step_number,
                             tx.window_number,
-                            repeatTimes
+                            repeatTimes,
                         );
                     }
 
