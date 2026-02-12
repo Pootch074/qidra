@@ -11,8 +11,6 @@ use Illuminate\Support\Facades\DB;
 
 class StepsController extends Controller
 {
-    
-
     public function store(StoreStepRequest $request)
     {
         $user = Auth::user();
@@ -88,5 +86,14 @@ class StepsController extends Controller
             ->exists();
 
         return response()->json(['exists' => $exists]);
+    }
+    public function steps()
+    {
+        $sectionId = Auth::user()->section_id;
+        $steps = Step::where('section_id', $sectionId)
+            ->orderBy('step_number', 'asc')
+            ->get();
+
+        return view('admin.steps.table', compact('steps'));
     }
 }

@@ -26,6 +26,7 @@ return new class extends Migration
             $table->foreign('step_id')->references('id')->on('steps')->onDelete('set null');
             $table->unsignedBigInteger('category_id')->nullable();
             $table->foreign('category_id')->references('id')->on('categories')->onDelete('set null');
+            $table->enum('assigned_category', ['regular', 'priority', 'both'])->nullable();
             $table->unsignedBigInteger('window_id')->nullable();
             $table->foreign('window_id')->references('id')->on('windows')->onDelete('set null');
             $table->tinyInteger('status')->default(0);

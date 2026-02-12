@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreStepRequest;
 use App\Models\Step;
 use App\Models\Transaction;
 use App\Models\User;
@@ -10,8 +11,6 @@ use App\Models\Window;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\StoreStepRequest;
-
 
 class AdminController extends Controller
 {
@@ -337,6 +336,7 @@ class AdminController extends Controller
 
         return view('admin.steps.table', compact('steps'));
     }
+
     public function storeStep(StoreStepRequest $request)
     {
         $user = Auth::user();
@@ -363,5 +363,95 @@ class AdminController extends Controller
         return redirect()
             ->route('fetch.steps')
             ->with('success', "Step '{$step->step_name}' and its first window added successfully.");
+    }
+
+    public function getStepsBySectionId()
+    {
+        try {
+            $user = Auth::user();
+            $frontDeskSectionId = Section::where('section_name', 'CRISIS INTERVENTION SECTION')->value('id');
+            $initialStepIds = Step::whereIn('step_number', [1, 2])->pluck('id')->toArray();
+
+            $applyCategoryFilter = $user->section_id === $frontDeskSectionId;
+
+            $steps = DB::table('steps')
+                ->leftJoin('windows', 'steps.id', '=', 'windows.step_id')
+                ->leftJoin('transactions', function ($join) use ($user, $applyCategoryFilter, $initialStepIds) {
+                    $join->on('windows.id', '=', 'transactions.window_id')
+                        ->where('transactions.queue_status', '=', 'serving')
+                        ->whereDate('transactions.created_at', now());
+
+                    if ($applyCategoryFilter) {
+                        $join->where(function ($q) use ($user, $initialStepIds) {
+                            $q->where(function ($q2) use ($user, $initialStepIds) {
+                                $q2->whereIn('steps.id', $initialStepIds)
+                                    ->where(function ($sub) use ($user) {
+                                        $sub->where('transactions.client_type', $user->assigned_category)
+                                            ->orWhere('transactions.client_type', 'deferred');
+                                    });
+                            })
+                                ->orWhereNotIn('steps.id', $initialStepIds);
+                        });
+                    }
+                })
+                ->where('steps.section_id', $user->section_id)
+                ->select(
+                    'steps.id as step_id',
+                    'steps.step_number',
+                    'steps.step_name',
+                    'windows.id as window_id',
+                    'windows.window_number',
+                    'transactions.id as tx_id',
+                    'transactions.queue_number',
+                    'transactions.client_type'
+                )
+                ->orderBy('steps.step_number')
+                ->orderBy('windows.window_number')
+                ->orderBy('transactions.queue_number')
+                ->get()
+                ->groupBy('step_id')
+                ->map(function ($group) {
+                    $firstStep = $group->first();
+
+                    return [
+                        'step_number' => $firstStep->step_number,
+                        'step_name' => $firstStep->step_name,
+                        'windows' => $group->groupBy('window_id')->map(function ($wins) {
+                            $firstWindow = $wins->first();
+
+                            if (! $firstWindow->window_id) {
+                                return null;
+                            }
+
+                            return [
+                                'window_id' => $firstWindow->window_id,
+                                'window_number' => $firstWindow->window_number,
+                                'transactions' => $wins
+                                    ->filter(fn ($t) => $t->tx_id !== null)
+                                    ->map(function ($t) {
+                                        $prefix = strtoupper(substr($t->client_type, 0, 1));
+                                        $formatted = $prefix.str_pad($t->queue_number, 3, '0', STR_PAD_LEFT);
+
+                                        return [
+                                            'id' => $t->tx_id,
+                                            'queue_number' => $formatted,
+                                            'client_type' => $t->client_type,
+                                        ];
+                                    })
+                                    ->values(),
+                            ];
+                        })->filter(fn ($w) => $w !== null)->values(),
+                    ];
+                })
+                ->values();
+
+            return response()->json($steps);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Server Error',
+                'message' => $e->getMessage(),
+            ], 500);
+        }
     }
 }

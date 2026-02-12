@@ -280,4 +280,5 @@
 
         });
     </script>
+    @vite('resources/js/adminSteps.js')
 @endsection

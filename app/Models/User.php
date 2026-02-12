@@ -42,6 +42,7 @@ class User extends Authenticatable
         'position',
         'user_type',
         'category_id',
+        'assigned_category',
         'step_id',
         'window_id',
         'status',
@@ -74,6 +75,7 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'string',
             'category_id' => 'integer',
+            'assigned_category' => 'string',
             'window_id' => 'integer',
             'status' => 'integer',
             'user_type' => 'integer',
@@ -171,6 +173,7 @@ class User extends Authenticatable
     {
         return $query->where('user_type', self::TYPE_IDSCAN);
     }
+
     public function division()
     {
         return $this->belongsTo(Division::class);
@@ -180,18 +183,21 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Section::class);
     }
+
     public function step()
     {
         return $this->belongsTo(Step::class);
     }
+
     public function category()
     {
         return $this->belongsTo(Category::class, 'category_id');
     }
+
     public function getCategoryNameAttribute(): ?string
-{
-    return $this->category?->category_name;
-}
+    {
+        return $this->category?->category_name;
+    }
 
     public function window()
     {
