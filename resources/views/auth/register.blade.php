@@ -173,7 +173,8 @@
                             <div class="bg-white rounded-lg shadow-lg w-full max-w-lg p-6 pointer-events-auto">
                                 <x-privacy-modal />
                                 <div class="mt-6 flex justify-end">
-                                    <button id="closeTermsModal" class="px-4 py-2 text-sm text-white bg-blue-600 rounded">
+                                    <button id="closeTermsModal"
+                                        class="px-4 py-2 text-sm text-white rounded rounded-xl bg-[#2e3192] font-semibold hover:bg-indigo-700 transition">
                                         Close
                                     </button>
                                 </div>
