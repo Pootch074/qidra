@@ -13,7 +13,8 @@ class Window extends Model
         return $this->belongsTo(Category::class, 'category_id');
     }
 
-    public function transactions() {
+    public function transactions()
+    {
         return $this->hasMany(Transaction::class);
     }
 

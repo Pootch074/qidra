@@ -6,7 +6,6 @@ use App\Models\Section;
 use App\Models\Step;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class DisplayController extends Controller
 {
@@ -21,80 +20,55 @@ class DisplayController extends Controller
     }
 
     public function getStepsBySectionId()
-{
-    try {
-        $user = Auth::user();
+    {
+        try {
+            $user = Auth::user();
 
-        // Front desk section ID
-        $frontDeskSectionId = Section::where('section_name', 'CRISIS INTERVENTION SECTION')->value('id');
-        $applyCategoryFilter = $user->section_id === $frontDeskSectionId;
+            // Fetch all steps for the user's section
+            $steps = Step::with('categories.windows')
+                ->where('section_id', $user->section_id)
+                ->orderBy('step_number')
+                ->get();
 
-        // Initial steps for front desk special filter
-        $initialStepIds = Step::whereIn('step_number', [1, 2])->pluck('id')->toArray();
+            $data = $steps->map(function ($step) use ($user) {
 
-        // Fetch steps with categories and windows
-        $steps = Step::with(['categories.windows'])
-            ->where('section_id', $user->section_id)
-            ->orderBy('step_number')
-            ->get();
+                // Determine which categories to pick for this step
+                $categoryNames = match ($step->step_number) {
+                    1, 2 => [$user->assigned_category],
+                    3, 4 => ['both'],
+                    default => [],
+                };
 
-        // Fetch today's serving transactions in user's section
-        $transactionsQuery = Transaction::where('section_id', $user->section_id)
-            ->where('queue_status', 'serving')
-            ->whereDate('created_at', now());
+                // Filter categories for this step
+                $filteredCategories = $step->categories->filter(fn ($cat) => in_array($cat->category_name, $categoryNames));
 
-        if ($applyCategoryFilter) {
-            $transactionsQuery->where(function ($q) use ($user, $initialStepIds) {
-                $q->where(function ($q2) use ($user, $initialStepIds) {
-                    $q2->whereIn('step_id', $initialStepIds)
-                        ->where(function ($sub) use ($user) {
-                            $sub->where('client_type', $user->assigned_category)
-                                ->orWhere('client_type', 'deferred');
-                        });
-                })->orWhereNotIn('step_id', $initialStepIds);
+                // Flatten windows
+                $windows = $filteredCategories->flatMap(fn ($cat) => $cat->windows)->values();
+
+                // Optional: you can assign first transaction here if needed
+                // For now, transactions array will be empty
+                $windows = $windows->map(fn ($win) => [
+                    'window_id' => $win->id,
+                    'window_number' => $win->window_number,
+                    'transactions' => [], // assign later
+                ]);
+
+                return [
+                    'step_number' => $step->step_number,
+                    'step_name' => $step->step_name,
+                    'windows' => $windows,
+                ];
             });
+
+            return response()->json($data);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Server Error',
+                'message' => $e->getMessage(),
+            ], 500);
         }
-
-        $transactions = $transactionsQuery->get();
-
-        // Build steps + windows + first transaction per window
-        $data = $steps->map(function ($step) use ($transactions) {
-            return [
-                'step_number' => $step->step_number,
-                'step_name' => $step->step_name,
-                'windows' => $step->categories->flatMap(function ($cat) use ($transactions) {
-                    return $cat->windows->map(function ($win) use ($transactions) {
-                        // Assign first available transaction for this step
-                        $firstTx = $transactions->where('step_id', $win->category->step_id)->first();
-
-                        $txArray = $firstTx ? [[
-                            'id' => $firstTx->id,
-                            'queue_number' => strtoupper(substr($firstTx->client_type, 0, 1)) .
-                                str_pad($firstTx->queue_number, 3, '0', STR_PAD_LEFT),
-                            'client_type' => $firstTx->client_type,
-                        ]] : [];
-
-                        return [
-                            'window_id' => $win->id,
-                            'window_number' => $win->window_number,
-                            'transactions' => collect($txArray),
-                        ];
-                    });
-                })->values(),
-            ];
-        });
-
-        return response()->json($data);
-
-    } catch (\Exception $e) {
-        return response()->json([
-            'error' => 'Server Error',
-            'message' => $e->getMessage(),
-        ], 500);
     }
-}
-
-
 
     public function getLatestTransaction()
     {

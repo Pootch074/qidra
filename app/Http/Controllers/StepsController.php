@@ -87,6 +87,7 @@ class StepsController extends Controller
 
         return response()->json(['exists' => $exists]);
     }
+
     public function steps()
     {
         $sectionId = Auth::user()->section_id;
