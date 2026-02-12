@@ -19,10 +19,8 @@ return new class extends Migration
             $table->string('full_name')->nullable();
             $table->string('phone_number')->nullable();
             $table->enum('client_type', ['priority', 'regular', 'deferred'])->nullable();
-            $table->unsignedBigInteger('step_id')->nullable();
-            $table->foreign('step_id')->references('id')->on('steps')->onDelete('set null');
-            $table->unsignedBigInteger('window_id')->nullable();
-            $table->foreign('window_id')->references('id')->on('windows')->onDelete('set null');
+            $table->integer('step_id')->nullable();
+            $table->integer('window_id')->nullable();
             $table->integer('recall_count')->nullable();
             $table->enum('ticket_status', ['issued', 'cancelled'])->nullable();
             $table->enum('queue_status', ['waiting', 'pending', 'deferred', 'serving', 'completed'])->default('waiting');
