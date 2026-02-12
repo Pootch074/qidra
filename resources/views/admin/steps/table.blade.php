@@ -17,7 +17,7 @@
                             class="text-gray-500 hover:text-gray-700 text-2xl font-bold">&times;</button>
                     </div>
 
-                    <form id="addStepForm" method="POST" action="{{ route('steps.store') }}">
+                    <form id="addStepForm" method="POST" action="{{ route('store.step') }}">
                         @csrf
                         <x-step-select name="step_name" :selected="old('step_name')" />
                         <div class="flex justify-end space-x-3">
@@ -43,7 +43,15 @@
                     </button>
                 </div>
                 <div class="overflow-x-auto flex-1">
-                    <table class="min-w-full divide-y divide-gray-200 text-gray-700">
+                    <div class="md:w-7/12 w-full bg-[#2e3192] p-3 flex flex-col h-full">
+                        <div id="stepsContainer" class="flex flex-col w-full h-full justify-start">
+                        </div>
+                        <div id="noSteps" class="hidden text-white text-lg font-medium">
+                            No steps available for your section.
+                        </div>
+                    </div>
+
+                    {{-- <table class="min-w-full divide-y divide-gray-200 text-gray-700">
                         <thead class="bg-[#2e3192] text-white sticky top-0 z-10">
                             <tr>
                                 <th class="text-left px-6 py-3 font-semibold tracking-wide rounded-tl-lg">Step Number</th>
@@ -55,12 +63,10 @@
                             @forelse($steps as $step)
                                 <tr class="odd:bg-white even:bg-gray-200 hover:bg-indigo-50 transition duration-200"
                                     data-id="{{ $step->id }}">
-                                    {{-- Step Number --}}
                                     <td class="text-left px-6 py-3 font-medium text-gray-700">
                                         {{ $step->step_number }}
                                     </td>
 
-                                    {{-- Editable Step Name --}}
                                     <td class="text-left px-6 py-3">
                                         <span class="editable-step-name cursor-pointer text-gray-800 hover:text-blue-600"
                                             data-id="{{ $step->id }}">
@@ -71,7 +77,6 @@
                                             value="{{ $step->step_name }}" data-id="{{ $step->id }}">
                                     </td>
 
-                                    {{-- Delete Button --}}
                                     <td class="px-6 py-3 text-left">
                                         @if ($step->step_number === 1)
                                             <button
@@ -96,7 +101,7 @@
                                 </tr>
                             @endforelse
                         </tbody>
-                    </table>
+                    </table> --}}
                 </div>
             </div>
         </div>

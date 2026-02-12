@@ -11,15 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class StepsController extends Controller
 {
-    public function steps()
-    {
-        $sectionId = Auth::user()->section_id;
-        $steps = Step::where('section_id', $sectionId)
-            ->orderBy('step_number', 'asc')
-            ->get();
-
-        return view('admin.steps.table', compact('steps'));
-    }
+    
 
     public function store(StoreStepRequest $request)
     {
@@ -45,7 +37,7 @@ class StepsController extends Controller
         });
 
         return redirect()
-            ->route('admin.steps')
+            ->route('fetch.steps')
             ->with('success', "Step '{$step->step_name}' and its first window added successfully.");
     }
 

@@ -68,9 +68,9 @@
             </li>
 
             <li>
-                <a href="{{ route('admin.steps') }}"
+                <a href="{{ route('fetch.steps') }}"
                     class="flex items-center p-2 text-white rounded-lg group
-               {{ request()->routeIs('admin.steps') ? 'bg-[#F03D46]' : 'hover:bg-[#5057c9]' }}">
+               {{ request()->routeIs('fetch.steps') ? 'bg-[#F03D46]' : 'hover:bg-[#5057c9]' }}">
                     <img src="{{ Vite::asset('resources/images/icons/horizontal-align-right.png') }}" alt="Users"
                         class="shrink-0 w-7 h-7 transition duration-75 group-hover:opacity-80">
                     <span class="flex-1 ms-3 whitespace-nowrap text-white">Steps</span>

@@ -9,6 +9,9 @@ use App\Models\UserAssignmentLog;
 use App\Models\Window;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\StoreStepRequest;
+
 
 class AdminController extends Controller
 {
@@ -323,5 +326,42 @@ class AdminController extends Controller
         } catch (\Exception $e) {
             return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
         }
+    }
+
+    public function fetchSteps()
+    {
+        $sectionId = Auth::user()->section_id;
+        $steps = Step::where('section_id', $sectionId)
+            ->orderBy('step_number', 'asc')
+            ->get();
+
+        return view('admin.steps.table', compact('steps'));
+    }
+    public function storeStep(StoreStepRequest $request)
+    {
+        $user = Auth::user();
+        $step = DB::transaction(function () use ($user, $request) {
+            $latestStep = Step::where('section_id', $user->section_id)
+                ->lockForUpdate() // ensures no duplicate step numbers
+                ->max('step_number');
+            $nextStepNumber = $latestStep ? $latestStep + 1 : 1;
+
+            $step = Step::create([
+                'section_id' => $user->section_id,
+                'step_number' => $nextStepNumber,
+                'step_name' => $request->step_name,
+            ]);
+
+            Window::create([
+                'window_number' => 1,
+                'step_id' => $step->id,
+            ]);
+
+            return $step;
+        });
+
+        return redirect()
+            ->route('fetch.steps')
+            ->with('success', "Step '{$step->step_name}' and its first window added successfully.");
     }
 }

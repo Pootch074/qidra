@@ -108,6 +108,10 @@ Route::middleware(['auth', 'otp.verified', CheckUserType::class.':0,1,2,3,5,6'])
         Route::get('/steps/{step}/windows', [AdminController::class, 'getWindowsByStep'])->name('admin.steps.windows');
 
     });
+    Route::prefix('admin/steps')->group(function () {
+        Route::get('/', [AdminController::class, 'fetchSteps'])->name('fetch.steps');
+        Route::post('/', [AdminController::class, 'storeStep'])->name('store.step');
+    });
 
     Route::get('idscan', [IdscanController::class, 'index'])->name('idscan');
 
@@ -128,11 +132,7 @@ Route::middleware(['auth', 'otp.verified', CheckUserType::class.':0,1,2,3,5,6'])
 Route::middleware(['auth'])->group(function () {
     // === Users Management ===
 
-    // === Steps Management ===
-    Route::prefix('admin/steps')->group(function () {
-        Route::get('/', [StepsController::class, 'steps'])->name('admin.steps');
-        Route::post('/', [StepsController::class, 'store'])->name('steps.store');
-    });
+    
     Route::put('/steps/{id}', [StepsController::class, 'update'])->name('steps.update');
     Route::delete('/steps/{id}', [StepsController::class, 'destroy'])->name('steps.destroy');
     Route::get('/steps/check/{sectionId}/{stepNumber}', [StepsController::class, 'check']);
