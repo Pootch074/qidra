@@ -33,14 +33,14 @@
                     use App\Libraries\Sections;
                 @endphp
 
-                @auth
-                    @if (Auth::user()->section_id == Sections::CRISIS_INTERVENTION_SECTION())
-                        <div class="flex flex-col items-center justify-center h-24 rounded-lg bg-white shadow">
-                            <p class="text-lg font-semibold text-gray-600">Priority Clients</p>
-                            <p class="text-2xl font-bold text-red-600 priorityCount">{{ $priorityCount }}</p>
-                        </div>
-                    @endif
-                @endauth
+                {{-- @auth
+                    @if (Auth::user()->section_id == Sections::CRISIS_INTERVENTION_SECTION()) --}}
+                <div class="flex flex-col items-center justify-center h-24 rounded-lg bg-white shadow">
+                    <p class="text-lg font-semibold text-gray-600">Priority Clients</p>
+                    <p class="text-2xl font-bold text-red-600 priorityCount">{{ $priorityCount }}</p>
+                </div>
+                {{-- @endif
+                @endauth --}}
 
                 {{-- Regular Clients --}}
                 <div class="flex flex-col items-center justify-center h-24 rounded-lg bg-white shadow">
