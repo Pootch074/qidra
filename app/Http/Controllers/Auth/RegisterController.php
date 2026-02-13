@@ -23,6 +23,7 @@ class RegisterController extends Controller
         // 1️⃣ Load all divisions and positions
         $divisions = Division::orderBy('division_name')->get();
         $positions = Position::orderBy('position_name')->get();
+        $roles = User::getAssignableUserTypes();
 
         // 2️⃣ Determine old input for cascading selects
         $oldDivisionId = old('divisionId');
@@ -52,7 +53,7 @@ class RegisterController extends Controller
 
         // 7️⃣ Return view with all data
         return view('auth.register', compact(
-            'divisions', 'sections', 'steps', 'categories', 'windows', 'positions'
+            'divisions', 'sections', 'steps', 'categories', 'windows', 'positions', 'roles'
         ));
     }
 
